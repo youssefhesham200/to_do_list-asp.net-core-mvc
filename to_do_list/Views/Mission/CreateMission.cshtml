@@ -1,0 +1,24 @@
+﻿@model Mission
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <form id="account" method="post">
+        <h1>Create a new Task</h1>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="form-floating mb-3">
+            <input asp-for="Name" class="form-control" aria-required="true" placeholder="TaskName" />
+            <label asp-for="Name" class="form-label">Name</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="Description" class="form-control" aria-required="true" placeholder="Description" />
+            <label asp-for="Description" class="form-label">Description</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="DeadLine" type="date" class="form-control" />
+            <label asp-for="DeadLine" class="form-label">Deadline for task</label>
+        </div>
+        <div>
+            <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
