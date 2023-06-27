@@ -5,8 +5,11 @@ This is a simple TodoList application built with ASP.NET Core MVC. Users can aut
 
 # Technologies Used
 ASP.NET Core MVC 
+
 Entity Framework Core 
+
 SQL Server LocalDB
+
 Bootstrap 
 
 # Features
