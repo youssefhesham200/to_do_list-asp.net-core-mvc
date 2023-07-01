@@ -11,16 +11,33 @@ namespace to_do_list.Repository
         {
             this.DbContext = DbContext;
         }
-        public IQueryable<T> FindAll() => DbContext.Set<T>().AsNoTracking();
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) =>
-            DbContext.Set<T>().Where(expression).AsNoTracking();
-        public void Create(T entity) => DbContext.Set<T>().Add(entity);
-        public void Update(T entity) => DbContext.Set<T>().Update(entity);
-        public void Delete(T entity) => DbContext.Set<T>().Remove(entity);
-
-        public void save()
+        public async Task<IQueryable<T>> FindAllAsync()
         {
-            DbContext.SaveChanges();
+            return (await DbContext.Set<T>().ToListAsync()).AsQueryable();
         }
+
+        public async Task<IQueryable<T>> FindByConditionAsync(Expression<Func<T, bool>> expression)
+        {
+            return (await DbContext.Set<T>().Where(expression).ToListAsync()).AsQueryable();
+        }
+        public async Task CreateAsync(T entity) {
+
+            await DbContext.Set<T>().AddAsync(entity);
+            await DbContext.SaveChangesAsync();
+
+        }
+
+        public async Task UpdateAsync(T entity) {
+
+            DbContext.Set<T>().Update(entity);
+            await DbContext.SaveChangesAsync();
+
+        }
+        public async Task DeleteAsync(T entity)
+        {
+            DbContext.Set<T>().Remove(entity);
+            await DbContext.SaveChangesAsync();
+        }
+
     }
 }

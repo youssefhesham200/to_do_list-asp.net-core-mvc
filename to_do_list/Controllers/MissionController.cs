@@ -37,13 +37,13 @@ namespace to_do_list.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateMission(Mission mission)
+        public async Task<IActionResult> CreateMission(Mission mission)
         {
             if (ModelState.IsValid)
             {
                 var UserId = _userManager.GetUserId(this.User);
                 mission.UserId = UserId;
-                _RepoMission.CreateMission(mission);
+                await _RepoMission.CreateMission(mission);
                 return RedirectToAction("GetMissions");
             }
 
@@ -51,7 +51,7 @@ namespace to_do_list.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetMissions()
+        public async Task<IActionResult> GetMissions()
         {
             var UserId = _userManager.GetUserId(this.User);
 
@@ -60,13 +60,13 @@ namespace to_do_list.Controllers
                 return RedirectToAction("Home");
             }
   
-            var missions = _RepoMission.GetAllMissions(UserId).ToList();
+            var missions = await _RepoMission.GetAllMissions(UserId);
 
             return View(missions);
         }
 
         [HttpPost]
-        public IActionResult MarkSelectedMissions(string[] selectedTaskIds, string submitButton)
+        public async Task <IActionResult> MarkSelectedMissions(string[] selectedTaskIds, string submitButton)
         {
 
             var UserId = _userManager.GetUserId(this.User);
@@ -84,11 +84,11 @@ namespace to_do_list.Controllers
                     Console.WriteLine(task);
                 }
 
-                _RepoMission.MarkAsCompleted(selectedTaskIds, UserId);
+                await  _RepoMission.MarkAsCompleted(selectedTaskIds, UserId);
              }
              else if (submitButton == "notcompleted")
              {
-                _RepoMission.MarkNotCompleted(selectedTaskIds, UserId);
+               await _RepoMission.MarkNotCompleted(selectedTaskIds, UserId);
              }
 
             return RedirectToAction("GetMissions");
@@ -96,7 +96,7 @@ namespace to_do_list.Controllers
 
 
         [HttpGet]
-        public IActionResult UpdateMission(string id)
+        public async Task<IActionResult> UpdateMission(string id)
         {
             Mission mission = new Mission();
             var UserId = _userManager.GetUserId(this.User);
@@ -106,7 +106,7 @@ namespace to_do_list.Controllers
                 return RedirectToAction("Home");
             }
 
-            var missions = _RepoMission.GetAllMissions(UserId).ToList();
+            var missions = await _RepoMission.GetAllMissions(UserId);
               
             foreach(var m in missions)
             {
@@ -121,7 +121,7 @@ namespace to_do_list.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateMission(Mission mission)
+        public async Task<IActionResult> UpdateMission(Mission mission)
         {
             if (ModelState.IsValid)
             {
@@ -133,7 +133,7 @@ namespace to_do_list.Controllers
                     return RedirectToAction("Home");
                 }
 
-                _RepoMission.UpdateMission(mission, UserId);
+                await _RepoMission.UpdateMission(mission, UserId);
                 return RedirectToAction("GetMissions");
             }
 
@@ -142,7 +142,7 @@ namespace to_do_list.Controllers
 
         //i know i should use Httpdelete here but there is a problem with iis server that get 405 error 
         [HttpGet]
-        public IActionResult DeleteMission(string id)
+        public async Task<IActionResult> DeleteMission(string id)
         {
             var UserId = _userManager.GetUserId(this.User);
 
@@ -151,7 +151,7 @@ namespace to_do_list.Controllers
                 return RedirectToAction("Home");
             }
 
-            _RepoMission.DeleteMission(id, UserId);
+            await _RepoMission.DeleteMission(id, UserId);
 
             return RedirectToAction("GetMissions");
         }

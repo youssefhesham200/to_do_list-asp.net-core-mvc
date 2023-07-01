@@ -13,30 +13,28 @@ namespace to_do_list.Repository
 
         }
 
-        public void CreateMission(Mission mission)
+        public async Task CreateMission(Mission mission)
         {
-            Create(mission);
-            save();
+            await CreateAsync(mission);
         }
 
-        public void DeleteMission(string id, string UserId)
+        public async Task DeleteMission(string id, string UserId)
         {
-            var missions = GetAllMissions(UserId).ToList();
+            var missions = await GetAllMissions(UserId);
 
             foreach (var mission in missions)
             {
                 if (mission.Id.ToString() == id)
                 {
-                    Delete(mission);
-                    save();
+                    await DeleteAsync(mission);
                     break;
                 }
             }
         }
 
-        public void UpdateMission(Mission mission , string UserId)
+        public async Task UpdateMission(Mission mission , string UserId)
         {
-            var missions = GetAllMissions(UserId).ToList();
+            var missions = await GetAllMissions(UserId);
 
             foreach (var m in missions)
             { 
@@ -45,16 +43,15 @@ namespace to_do_list.Repository
                     m.Name = mission.Name;
                     m.Description = mission.Description;
                     m.DeadLine = mission.DeadLine;
-                    Update(m);
-                    save();
+                    await UpdateAsync(m);
                     break;
                 }
             }
         }
 
-        public void MarkAsCompleted(string [] ids, string UserId)
+        public async Task MarkAsCompleted(string [] ids, string UserId)
         {
-            var missions = GetAllMissions(UserId).ToList();
+            var missions = await GetAllMissions(UserId);
             var dict = new Dictionary<string, Mission>();
 
             foreach (var mission in missions)
@@ -68,15 +65,14 @@ namespace to_do_list.Repository
                 {
                     Mission mission = dict[id];
                     mission.IsCompleted = true;
-                    Update(mission);
-                    save();
+                    await UpdateAsync(mission);
                 }
             }
         }
 
-        public void MarkNotCompleted(string [] ids, string UserId)
+        public async Task MarkNotCompleted(string [] ids, string UserId)
         {
-            var missions = GetAllMissions(UserId).ToList();
+            var missions = await GetAllMissions(UserId);
             var dict = new Dictionary<string, Mission>();
 
             foreach (var mission in missions)
@@ -90,15 +86,14 @@ namespace to_do_list.Repository
                 {
                     Mission mission = dict[id];
                     mission.IsCompleted = false;
-                    Update(mission);
-                    save();
+                    await UpdateAsync(mission);
                 }
             }
         }
 
-        public IQueryable<Mission> GetAllMissions(string UserId)
+        public async Task<IQueryable<Mission>> GetAllMissions(string UserId)
         {
-            return FindByCondition(t => UserId == t.UserId);
+            return await FindByConditionAsync(t => UserId == t.UserId);
         }
     }
 }
